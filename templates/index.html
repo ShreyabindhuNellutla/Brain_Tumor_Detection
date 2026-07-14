@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}Brain Tumor Detection Portal{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-white d-flex align-items-center">
+    <div class="container">
+        <div class="row align-items-center py-5">
+            <div class="col-lg-7 mb-4 mb-lg-0 animate-fade-in-left">
+                <span class="badge bg-accent text-white px-3 py-2 rounded-pill mb-3 text-uppercase fw-semibold tracking-wider">AI Medical Diagnosis</span>
+                <h1 class="display-4 fw-extrabold mb-3 leading-tight">
+                    Brain Tumor Detection <br>
+                    <span class="text-gradient">Using Deep Learning</span>
+                </h1>
+                <p class="lead text-light-muted mb-4">
+                    Identify and classify neurological anomalies using clinical-grade VGG16 Deep Learning models. Accurately detect and localize brain pathologies on demand.
+                </p>
+                <div class="d-flex flex-sm-row flex-column gap-3">
+                    <a href="/predict" class="btn btn-primary btn-lg px-4 py-3 rounded-3 shadow-lg btn-animate">
+                        <i class="bi bi-cpu me-2"></i>Start Prediction
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-flex justify-content-center animate-fade-in-right">
+                <div class="hero-visual-wrapper position-relative">
+                    <div class="glowing-orb"></div>
+                    <div class="brain-svg-container" style="max-width: 350px;">
+                        <svg viewBox="0 0 400 400" width="100%" height="100%" class="brain-illustration">
+                            <defs>
+                                <radialGradient id="grad-glow" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.3"/>
+                                    <stop offset="100%" stop-color="var(--color-primary)" stop-opacity="0"/>
+                                </radialGradient>
+                                <linearGradient id="grad-line" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#00b4d8"/>
+                                    <stop offset="100%" stop-color="#0077b6"/>
+                                </linearGradient>
+                            </defs>
+                            <circle cx="200" cy="200" r="180" fill="url(#grad-glow)" />
+                            <circle cx="200" cy="200" r="150" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2" />
+                            <circle cx="200" cy="200" r="120" fill="none" stroke="rgba(0,180,216,0.15)" stroke-width="1.5" stroke-dasharray="5 5" />
+                            <line x1="200" y1="20" x2="200" y2="380" stroke="rgba(255,255,255,0.05)" stroke-width="1.5" />
+                            <line x1="20" y1="200" x2="380" y2="200" stroke="rgba(255,255,255,0.05)" stroke-width="1.5" />
+                            <g class="brain-lobes" stroke="url(#grad-line)" stroke-width="2.5" fill="none">
+                                <path d="M 190,110 C 140,110 110,140 110,180 C 110,210 120,230 130,250 C 140,270 150,290 190,290" />
+                                <path d="M 190,140 C 160,140 140,160 140,185 C 140,205 145,215 155,230 C 165,245 170,255 190,255" />
+                                <path d="M 210,110 C 260,110 290,140 290,180 C 290,210 280,230 270,250 C 260,270 250,290 210,290" />
+                                <path d="M 210,140 C 240,140 260,160 260,185 C 260,205 255,215 245,230 C 235,245 230,255 210,255" />
+                            </g>
+                            <g fill="var(--color-accent)">
+                                <circle cx="190" cy="110" r="5" class="pulse-node" />
+                                <circle cx="210" cy="110" r="5" class="pulse-node" />
+                                <circle cx="110" cy="180" r="5" class="pulse-node-slow" />
+                                <circle cx="290" cy="180" r="5" class="pulse-node-slow" />
+                                <circle cx="190" cy="290" r="5" class="pulse-node" />
+                                <circle cx="210" cy="290" r="5" class="pulse-node" />
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Overview / Educational Section -->
+<section id="intro-section" class="py-5 section-light border-bottom">
+    <div class="container py-4">
+        <!-- Main Intro Row -->
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <span class="text-primary fw-bold text-uppercase tracking-wider">Clinical Overview</span>
+                <h2 class="display-6 fw-bold mt-2 text-dark-blue">What is Brain Tumor Detection?</h2>
+                <div class="heading-line mx-auto"></div>
+                <p class="text-muted lead">Combining magnetic resonance scans and deep convolution layers to accelerate neurologists' analysis workflows.</p>
+            </div>
+        </div>
+
+        <div class="row g-5 align-items-center mb-5">
+            <div class="col-lg-6">
+                <h3 class="fw-bold text-dark-blue mb-4">Why are MRI scans used?</h3>
+                <p class="text-muted">
+                    Brain tumors represent severe, life-altering pathologies that manifest in soft cranial structures. To analyze these anomalies without surgical invasiveness, clinicians utilize <strong>Magnetic Resonance Imaging (MRI)</strong>.
+                </p>
+                <p class="text-muted">
+                    MRI scanning provides soft-tissue contrast that highlights spatial changes, lesions, and abnormal growths. Using deep learning networks, the detection process can be augmented, identifying pixel-level anomalies that might escape manual initial review.
+                </p>
+                <h3 class="fw-bold text-dark-blue mt-4 mb-3">How does Deep Learning help?</h3>
+                <p class="text-muted mb-0">
+                    Deep convolutional neural networks automatically extract hierarchy levels of visual information (from low-level edges to high-level tissue contours). This eliminates manual feature engineering, providing rapid and consistent scan assessments on demand.
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4 card-glass">
+                    <h4 class="fw-bold text-dark-blue mb-4 d-flex align-items-center">
+                        <i class="bi bi-cpu text-primary me-2"></i>Model Details & VGG16
+                    </h4>
+                    <p class="text-muted small">
+                        This system utilizes a pre-trained **VGG16 model** that was originally trained on millions of generic images. By freezing the early spatial feature extraction layers and fine-tuning custom classification layers specifically with brain MRI images, the network is optimized to identify subtle pathological features in MRI scans.
+                    </p>
+                    <div class="p-3 bg-primary-light border-start border-primary border-4 rounded-3 mb-3">
+                        <span class="fw-bold text-dark-blue d-block small">TensorFlow & Keras Implementation</span>
+                        <span class="text-muted small">The Keras model is saved as a <code>.h5</code> file. It pre-processes uploads dynamically by resizing images to 128x128 pixels, converting them to 3-channel RGB, and scaling pixel elements to a [0, 1] float range.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Target Classes Row -->
+        <div class="row g-4 mb-5 pt-4 border-top">
+            <div class="col-md-6 col-lg-3">
+                <div class="p-4 bg-white border border-dashed rounded-3 h-100 text-center card-hover">
+                    <span class="badge bg-danger-light text-danger rounded-pill px-3 py-1 mb-3">Class 0</span>
+                    <h5 class="fw-bold text-dark-blue mb-2">Glioma</h5>
+                    <p class="text-muted small mb-0">Brain tumors starting in the glial cells supporting neurons, commonly infiltrating surrounding brain tissue.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="p-4 bg-white border border-dashed rounded-3 h-100 text-center card-hover">
+                    <span class="badge bg-warning-light text-warning rounded-pill px-3 py-1 mb-3" style="background-color: rgba(253, 126, 20, 0.1); color: #fd7e14;">Class 1</span>
+                    <h5 class="fw-bold text-dark-blue mb-2">Meningioma</h5>
+                    <p class="text-muted small mb-0">Tumors that develop in the meninges, the protective membranes surrounding the brain and spinal cord.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="p-4 bg-white border border-dashed rounded-3 h-100 text-center card-hover">
+                    <span class="badge bg-success-light text-success rounded-pill px-3 py-1 mb-3">Class 2</span>
+                    <h5 class="fw-bold text-dark-blue mb-2">No Tumor</h5>
+                    <p class="text-muted small mb-0">Diagnostic scans verifying healthy, normal brain anatomy without visual pathological masses.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="p-4 bg-white border border-dashed rounded-3 h-100 text-center card-hover">
+                    <span class="badge bg-purple-light text-purple rounded-pill px-3 py-1 mb-3" style="background-color: rgba(111, 66, 193, 0.1); color: #6f42c1;">Class 3</span>
+                    <h5 class="fw-bold text-dark-blue mb-2">Pituitary</h5>
+                    <p class="text-muted small mb-0">Tumors that grow in the pituitary gland at the base of the brain, affecting endocrine systems.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preprocessing Workflow Steps -->
+        <div class="row g-4 pt-4 border-top">
+            <div class="col-12 text-center mb-3">
+                <span class="text-accent fw-bold text-uppercase tracking-wider">How to Predict</span>
+                <h3 class="fw-bold text-dark-blue mt-2">Prediction Workflow Steps</h3>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="step-number mx-auto mb-3">1</div>
+                <h5 class="fw-bold text-dark-blue">1. Select/Upload Scan</h5>
+                <p class="text-muted small px-3">Upload your patient MRI image (JPG, JPEG, or PNG) directly in the predict terminal workspace.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="step-number mx-auto mb-3">2</div>
+                <h5 class="fw-bold text-dark-blue">2. Process Inference</h5>
+                <p class="text-muted small px-3">The model normalizes the input, processes the tensor parameters, and classifies the tumor type.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="step-number mx-auto mb-3">3</div>
+                <h5 class="fw-bold text-dark-blue">3. Review Grad-CAM Localization</h5>
+                <p class="text-muted small px-3">If a tumor is detected, the visual overlay highlights the suspicious regions side-by-side with original.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

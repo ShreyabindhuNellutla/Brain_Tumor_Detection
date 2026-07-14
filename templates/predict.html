@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Diagnostic Workspace{% endblock %}
+
+{% block content %}
+<!-- Header Bar -->
+<section class="bg-primary text-white py-4 shadow-sm border-bottom">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-cpu fs-3 me-3 text-accent"></i>
+            <div>
+                <h1 class="h3 fw-bold mb-0">Diagnostic Workspace</h1>
+                <p class="text-white-50 small mb-0">Upload MRI scans and classify brain pathologies in real-time.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Predict Container -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row g-4 justify-content-center">
+            
+            <!-- Left: Upload Box -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 p-4 card-glass h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="fw-bold text-dark-blue mb-4 d-flex align-items-center">
+                                <i class="bi bi-cloud-upload text-primary me-2"></i>1. Submit MRI Scan
+                            </h5>
+                            
+                            <!-- Drag & Drop Zone -->
+                            <div id="drop-zone" class="upload-zone d-flex flex-column align-items-center justify-content-center border-dashed rounded-3 p-5 text-center mb-4 transition-all" style="min-height: 270px;">
+                                <input type="file" id="file-input" class="d-none" accept=".png, .jpg, .jpeg">
+                                
+                                <div id="upload-placeholder-ui">
+                                    <i class="bi bi-file-earmark-medical text-primary display-4 mb-3 d-block"></i>
+                                    <p class="fw-medium text-dark-blue mb-1">Drag and drop MRI scan here</p>
+                                    <p class="text-muted small mb-3">Supports JPG, JPEG, and PNG</p>
+                                    <button type="button" class="btn btn-primary-light text-primary btn-sm rounded-pill px-4 py-2">
+                                        Browse Image
+                                    </button>
+                                </div>
+
+                                <!-- Image Preview -->
+                                <div id="preview-container" class="d-none w-100 position-relative">
+                                    <img id="image-preview" src="#" alt="MRI scan preview" class="img-fluid rounded-3 border mb-3 shadow-sm">
+                                    <button type="button" id="clear-preview" class="btn-close btn-close-white bg-danger border border-2 border-white rounded-circle shadow position-absolute top-0 end-0 m-2" aria-label="Remove image"></button>
+                                    <p id="file-info" class="text-muted small mb-0 font-monospace text-truncate"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Predict Button -->
+                        <button id="predict-btn" class="btn btn-primary btn-lg w-100 py-3 rounded-3 d-flex align-items-center justify-content-center btn-animate shadow-sm mt-3" disabled>
+                            <i class="bi bi-heart-pulse-fill me-2"></i>Predict
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Results Card -->
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-4 p-4 card-glass h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="fw-bold text-dark-blue mb-4 d-flex align-items-center">
+                            <i class="bi bi-prescription text-primary me-2"></i>2. Diagnostic Evaluation
+                        </h5>
+
+                        <!-- Placeholder State -->
+                        <div id="placeholder-container" class="text-center py-5 my-auto">
+                            <i class="bi bi-file-earmark-bar-graph text-muted display-3 mb-3 d-block"></i>
+                            <h6 class="fw-bold text-muted">Awaiting Scan Submission</h6>
+                            <p class="text-muted small mx-auto" style="max-width: 320px;">Please load a brain MRI scan in the left terminal, then click "Predict" to run the classification model.</p>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div id="loading-container" class="text-center py-5 my-auto d-none">
+                            <div class="spinner-wrapper mb-3">
+                                <div class="spinner-border text-primary" role="status" style="width: 3.5rem; height: 3.5rem; border-width: 0.3em;">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                            <h6 class="fw-bold text-dark-blue animate-pulse">Running Neural Inference...</h6>
+                            <p class="text-muted small">Accessing VGG16 weights & mapping activation tensors</p>
+                        </div>
+
+                        <!-- Result Display State -->
+                        <div id="result-container" class="d-none w-100 my-auto">
+                            <!-- Color-coded result card alert -->
+                            <div id="result-alert" class="alert d-flex align-items-center rounded-3 p-3 mb-4" role="alert">
+                                <i id="result-alert-icon" class="bi fs-2 me-3"></i>
+                                <div class="w-100">
+                                    <h6 class="alert-heading fw-bold mb-0" id="result-status-title">Tumor Detected</h6>
+                                    <p class="mb-0 small mt-1" id="result-status-desc">MRI classification indicates pathological tissue structure.</p>
+                                </div>
+                            </div>
+
+                            <!-- Diagnostic Info (Confidence, success message, reset) -->
+                            <div class="row g-4 mb-4">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <span class="text-muted small d-block">Predicted Diagnosis</span>
+                                        <h4 class="fw-bold text-dark-blue mb-0" id="result-tumor">Glioma</h4>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="text-muted small">Prediction Confidence</span>
+                                            <span class="fw-bold text-dark-blue small" id="result-confidence">98.5%</span>
+                                        </div>
+                                        <div class="progress" style="height: 10px;">
+                                            <div id="result-progress" class="progress-bar progress-bar-striped progress-bar-animated rounded-pill" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center text-success small">
+                                        <i class="bi bi-check-circle-fill me-1"></i>
+                                        <span>Prediction completed successfully.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Visualization Row (Side-by-Side Images) -->
+                            <div class="border-top pt-4">
+                                <h6 class="fw-bold text-dark-blue mb-3"><i class="bi bi-images text-primary me-2"></i>Tumor Localization & Visual Mapping</h6>
+                                
+                                <div class="row g-3 justify-content-center" id="visualization-row">
+                                    <!-- Original MRI image -->
+                                    <div class="col-md-6 text-center" id="vis-col-original">
+                                        <div class="p-2 border rounded bg-light-bg shadow-sm">
+                                            <span class="badge bg-secondary mb-2">Original MRI Scan</span>
+                                            <img id="vis-img-original" src="#" alt="Original MRI" class="img-fluid rounded border max-height-180 d-block mx-auto">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Grad-CAM Heatmap overlay -->
+                                    <div class="col-md-6 text-center d-none" id="vis-col-gradcam">
+                                        <div class="p-2 border rounded bg-light-bg shadow-sm">
+                                            <span class="badge bg-danger mb-2">Grad-CAM Localization</span>
+                                            <img id="vis-img-gradcam" src="#" alt="Grad-CAM Overlay" class="img-fluid rounded border max-height-180 d-block mx-auto">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- No Tumor visualizer label -->
+                                <p id="vis-no-tumor-msg" class="text-muted small mt-2 d-none text-center">
+                                    <i class="bi bi-info-circle me-1"></i>No Tumor Detected. No suspicious region highlighted.
+                                </p>
+                            </div>
+
+                            <!-- Explanation & Suggestions Section -->
+                            <div class="border-top pt-4 mt-4" id="explanation-container">
+                                <h6 class="fw-bold text-dark-blue mb-3"><i class="bi bi-file-medical text-primary me-2"></i>Pathology Details & Clinical Guidelines</h6>
+                                <div class="p-3 bg-light-bg rounded border mb-3">
+                                    <span class="text-muted small d-block mb-1 fw-semibold text-uppercase tracking-wider" style="font-size: 0.7rem;">Clinical Description</span>
+                                    <p id="pathology-explanation" class="small text-muted mb-0"></p>
+                                </div>
+                                <div class="p-3 bg-light-bg rounded border">
+                                    <span class="text-muted small d-block mb-2 fw-semibold text-uppercase tracking-wider" style="font-size: 0.7rem;">Recommended Next Steps / Guidelines</span>
+                                    <ul id="pathology-suggestions" class="small text-muted mb-0 ps-3"></ul>
+                                </div>
+                            </div>
+
+                            <!-- Reset Button -->
+                            <div class="mt-4 pt-3 border-top d-flex">
+                                <button id="reset-btn" class="btn btn-outline-secondary btn-sm ms-auto rounded-pill px-4">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i>Reset Workspace
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+{% endblock %}
